@@ -1,0 +1,154 @@
+.mainText{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.powered{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+    opacity: 0.5;
+}
+
+.ctas{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.container{
+    height: 20rem;
+    width: 40rem;
+    display: flex;
+}
+
+.left{
+    height: 20rem;
+    width: 20rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.img{
+    object-fit: cover;
+}
+
+.drone1{
+    height: 20rem;
+    width: 19.5rem;
+}
+
+.drone2{
+    height: 9.75rem;
+    width: 19.5rem;
+}
+
+.drone3{
+    height: 9.75rem;
+    width: 19.5rem;
+}
+
+.mainBody{
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+@media (max-width: 600px) {
+    .mainText{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .powered{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        margin-top: -1rem;
+        margin-bottom: 2rem;
+        opacity: 0.5;
+    }
+    
+    .ctas{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .container{
+        height: 10rem;
+        width: 20rem;
+        display: flex;
+    }
+    
+    .left{
+        height: 10rem;
+        width: 10rem;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .right{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .img{
+        object-fit: cover;
+    }
+    
+    .drone1{
+        height: 10rem;
+        width: 9.75rem;
+    }
+    
+    .drone2{
+        height: 4.875rem;
+        width: 9.75rem;
+    }
+    
+    .drone3{
+        height: 4.875rem;
+        width: 9.75rem;
+    }
+    
+    .mainBody{
+        width: 100vw;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+
+}
