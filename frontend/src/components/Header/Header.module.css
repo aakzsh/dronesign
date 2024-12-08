@@ -6,17 +6,18 @@
 }
 
 .headerImg{
-    width: 3rem;
+    width: 2rem;
 }
 
 .headerText{
     font-weight: 600;
-    font-size: 1.8rem;
+    font-size: 1.3rem;
 }
 
 .headerLeft{
     display: flex;
     align-items: center;
+    cursor: pointer;
     justify-content: flex-start;
     gap: 1rem;
     height: 3rem;
