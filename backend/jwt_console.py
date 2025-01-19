@@ -3,6 +3,7 @@ import sys
 import subprocess
 from flask_cors import CORS
 from datetime import datetime, timedelta
+import requests
 
 from docusign_esign import EnvelopesApi
 from docusign_esign import ApiClient
@@ -101,55 +102,56 @@ def main():
             else:
                 sys.exit("Please grant consent")
 
-
-def try_login(private_key, api_client):
-    jwt_values = get_token(private_key, api_client)
-    return jsonify(jwt_values)
-
-# main()
-
 @app.route('/')
 def index():
     return "check"
 
+@app.route('/login_new/<code>', methods=['GET'])
+def login_new(code):
+    # Get the code from query parameters
+    if not code:
+        return jsonify({"error": "Missing 'code' parameter"}), 400
 
-@app.route('/login')
-def login():
-    api_client = ApiClient()
-    api_client.set_base_path(DS_JWT["authorization_server"])
-    api_client.set_oauth_host_name(DS_JWT["authorization_server"])
-
-    private_key = get_private_key(DS_JWT["private_key_file"]).encode("ascii").decode("utf-8")
+    # Define the token API URL and headers
+    url = 'https://account-d.docusign.com/oauth/token'
+    headers = {
+        'Authorization': 'BASIC xyz',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    data = {
+        'grant_type': 'authorization_code',
+        'code': code
+    }
 
     try:
-        res = try_login(private_key, api_client)
-        return res
-    except ApiException as err:
-        body = err.body.decode('utf8')
+        # Make the POST request to the token API
+        response = requests.post(url, data=data, headers=headers)
+        response.raise_for_status()  # Raise an error for non-2xx status codes
 
-        if "consent_required" in body:
-            consent_url = get_consent_url()
-            return "failed"
-        
-@app.route('/send_envelope', methods=["POST"])
-def send_enveloper():
-    return ""
+        # Return the API response
+        return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        # Handle any errors that occur during the request
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/get_envelopes', methods=["GET"])
-def get_envelopes():
+@app.route('/get_envelopes/<token>', methods=["GET"])
+def get_envelopes(token):
         api_client = ApiClient()
         api_client.set_base_path(DS_JWT["authorization_server"])
-        api_client.set_default_header(header_name="Authorization", header_value=f"<header here>")
+        api_client.set_default_header(header_name="Authorization", header_value=f"Bearer {token}")
         envelope_api = EnvelopesApi(api_client)
+        print(envelope_api.create_envelope(account_id="743f01c6-40d5-43ae-b39e-ef38eb9a7f41"))
         from_date = (datetime.utcnow() - timedelta(days=30)).strftime('%Y-%m-%d')
-        results = envelope_api.list_status_changes(account_id="46e1f879-7719-425e-bebe-993a57991314", from_date=from_date)
-        print(results)
-        return results
+        # results = envelope_api.list_status_changes(account_id="28c81395-4c1f-4bdd-a1f0-12a6202468c5", from_date=from_date)
+        # print(results)
+        return "results"
 
-@app.route("/lol")
-def lol():
-    from_date = (datetime.utcnow() - timedelta(days=30)).strftime('%Y-%m-%d')
-    print(from_date)
-    return ""
+@app.route('/getinfo/<token>')
+def getinfo(token):
+    api_client = ApiClient()
+    user_info = api_client.get_user_info(access_token=token)
+    print(user_info)
+    return str(user_info)
+
 if  __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

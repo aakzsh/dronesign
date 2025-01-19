@@ -9,6 +9,31 @@ const Dashboard = () => {
 
   const [accessCode, setAccessCode] = useState(null);
   const [isLoginSet, setIsLoginSet] = useState(false);
+  const [username, setUsername] = useState("")
+
+
+  const navigateIfLoggedin = async () =>{
+    const token = localStorage.getItem("ds_access_token");
+    // alert(token!=null && token.startsWith('e'))
+    if(token==null){
+      navigate('/auth');
+    }
+    const userData = await axios.get('https://account-d.docusign.com/oauth/userinfo', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+    setUsername(userData.data.name)
+  }
+
+  // Fetch and set access token from localStorage when the query string changes
+  useEffect(() => {
+    navigateIfLoggedin()
+  }, []);
+
+  const registerDrone = () =>{
+    alert("registering")
+  }
 
   // Fetch and set access token from localStorage when the query string changes
   useEffect(() => {
@@ -68,7 +93,9 @@ const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
       <p>Access Code: {accessCode}</p>
+      <ContainedButton text="Register New Drone" onClick={registerDrone} />
       <ContainedButton text="Logout" onClick={handleLogout} />
+      <p>User name: {username}</p>
     </div>
   );
 };
