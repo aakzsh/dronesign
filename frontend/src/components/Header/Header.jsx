@@ -11,7 +11,7 @@ const Header = () =>{
             <p className={Styles.headerText}>DroneSign</p>
         </div>
         <div className={Styles.headerRight}>
-            <OutlinedButton text="Login/Register"/>
+            <OutlinedButton text="Login/Register" onClick={()=>navigate('/auth')}/>
         </div>
     </div>
 }

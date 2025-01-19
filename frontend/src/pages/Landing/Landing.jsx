@@ -29,7 +29,7 @@ const Landing = () => {
         </p>
         <p className={Styles.powered}>powered by DocuSign</p>
         <div className={Styles.ctas}>
-          <ContainedButton text="Register your first Drone" onClick={()=>console.log("hehe")} />
+          <ContainedButton text="Register your first Drone" onClick={()=>navigate('/auth')} />
           <OutlinedButton text="Discover" onClick={()=>navigate('/discover')}/>
         </div>
       </main>

@@ -1,0 +1,20 @@
+.mainbody{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #000000;
+    background-image: url("../../assets/images/drone5.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media (max-width: 600px) {
+    .mainbody{
+        font-size: 1.5rem;
+        text-align: center;
+    }
+}
