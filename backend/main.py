@@ -4,15 +4,16 @@ import subprocess
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import requests
-
+from io import BytesIO
 from docusign_esign import EnvelopesApi
 from docusign_esign import ApiClient
 from docusign_esign.client.api_exception import ApiException
 from app.jwt_helpers import get_jwt_token, get_private_key
 from app.eSignature.examples.eg002_signing_via_email import Eg002SigningViaEmailController
 from app.jwt_config import DS_JWT
-from flask import Flask, jsonify
-
+from flask import Flask, jsonify, request, send_file
+from app.create_envelope import send_document_for_signing
+import json
 # pip install DocuSign SDK
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'docusign_esign'])
 
@@ -106,6 +107,45 @@ def main():
 def index():
     return "check"
 
+DOCUSIGN_API_URL = "https://demo.docusign.net/restapi/v2.1/accounts"
+@app.route('/envelopes/<token>', methods=['GET'])
+def get_envelopes(token):
+    from_date = request.args.get("from_date", "2024-01-01T00:00:00Z")
+    account_id = request.args.get("account_id","743f01c6-40d5-43ae-b39e-ef38eb9a7f41" )
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    
+    try:
+        response = requests.get(f"{DOCUSIGN_API_URL}/{account_id}/envelopes?from_date={from_date}", headers=headers)
+        response.raise_for_status()
+        return jsonify(response.json()), response.status_code
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/get_doc/<accountID>/envelopes/<env_id>', methods=['GET'])
+def get_documents(accountID, env_id):
+    user_token = request.args.get("token", "NA")
+    headers = {
+        "Authorization": f"Bearer {user_token}"
+    }
+    try:
+        response = requests.get(f"https://demo.docusign.net/restapi/v2.1/accounts/{accountID}/envelopes/{env_id}/documents/1", headers=headers)
+        response.raise_for_status()
+        file_stream = BytesIO(response.content)
+
+        # Use send_file to send the file back to the client
+        return send_file(
+            file_stream,
+            as_attachment=True,  # Forces download
+            download_name="document.pdf",  # Suggested filename
+            mimetype=response.headers.get('Content-Type', 'application/pdf')  # Use the correct MIME type
+        )
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+
 @app.route('/login_new/<code>', methods=['GET'])
 def login_new(code):
     # Get the code from query parameters
@@ -115,7 +155,7 @@ def login_new(code):
     # Define the token API URL and headers
     url = 'https://account-d.docusign.com/oauth/token'
     headers = {
-        'Authorization': 'BASIC xyz',
+        'Authorization': 'Basic NTFkOWE1ZGItOTFhOS00NzgxLWEwNzAtYzE0YjVhMTExOTA3OjQ3OTE0NjZlLTI3YjItNGJkZC1iYTI1LTZlZTVmZmUzZTI2OA==',
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     data = {
@@ -129,22 +169,21 @@ def login_new(code):
         response.raise_for_status()  # Raise an error for non-2xx status codes
 
         # Return the API response
+        print(response.json())
         return jsonify(response.json())
     except requests.exceptions.RequestException as e:
         # Handle any errors that occur during the request
         return jsonify({"error": str(e)}), 500
 
-@app.route('/get_envelopes/<token>', methods=["GET"])
-def get_envelopes(token):
-        api_client = ApiClient()
-        api_client.set_base_path(DS_JWT["authorization_server"])
-        api_client.set_default_header(header_name="Authorization", header_value=f"Bearer {token}")
-        envelope_api = EnvelopesApi(api_client)
-        print(envelope_api.create_envelope(account_id="743f01c6-40d5-43ae-b39e-ef38eb9a7f41"))
-        from_date = (datetime.utcnow() - timedelta(days=30)).strftime('%Y-%m-%d')
-        # results = envelope_api.list_status_changes(account_id="28c81395-4c1f-4bdd-a1f0-12a6202468c5", from_date=from_date)
-        # print(results)
-        return "results"
+@app.route('/create_envelope/<token>', methods=["GET"])
+def create_envelope(token):
+    data = request.args.get('data')
+    
+    if data:
+        # Convert the stringified JSON back into a dictionary
+        data_dict = json.loads(data)
+    res = send_document_for_signing(data_dict, token)
+    return res
 
 @app.route('/getinfo/<token>')
 def getinfo(token):

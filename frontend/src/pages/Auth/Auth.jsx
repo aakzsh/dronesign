@@ -3,6 +3,7 @@ import ContainedButton from '../../components/Buttons/ContainedButton';
 import Styles from './Auth.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import logo from "../../assets/icons/logo.svg"
 
 const DocuSignLogin = () => {
   const navigate = useNavigate();
@@ -50,7 +51,8 @@ const DocuSignLogin = () => {
 
   return (
     <main className={Styles.mainbody}>
-      <p>Authenticate yourself with DocuSign</p>
+      <img src={logo} className={Styles.logo} alt="" />
+      <p className={Styles.authText}>Authenticate with DocuSign</p>
       <ContainedButton text="Authenticate" onClick={handleLogin} />
     </main>
   );

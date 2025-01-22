@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+input, select{
+  background-color: transparent;
+  border-radius: 0.3rem;
+  border: 1.2px solid black;
+}
