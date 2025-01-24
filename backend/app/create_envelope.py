@@ -4,10 +4,8 @@ from .pdf_generator import generate_mock_drone_pdf
 from datetime import datetime
 # from consts import pdf_file, demo_docs_path
 # Configuration
-client_id = '51d9a5db-91a9-4781-a070-c14b5a111907	'  # Integration key
-base_path = 'https://demo.docusign.net/restapi'  # Use demo base path for sandbox
-# oauth_token = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCAmRgyXzjdSAgAgNk7QKI43UgCAJUTyCgfTN1LofASpiAkaMUVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADUxZDlhNWRiLTkxYTktNDc4MS1hMDcwLWMxNGI1YTExMTkwNyIAJAAAADUxZDlhNWRiLTkxYTktNDc4MS1hMDcwLWMxNGI1YTExMTkwNzAAgMNgFl443Ug3ABQ2jLdVQipBjmShlubi5EQ.L2MGPgivbM5gdsc59QYpN3CdHQiSkoXPdx2ZlBiybp7o8ma062kXzule6BxzbOA1ouPkSmmrfTvfYy-114PP0DnjGVcmSRSdqpfjF0uhMn0-2qkOffuWFvc69X_KYu3yQw9mkXp3Q-W_yvfXwcKQyuNuN-D58JngJ8egSz5J8hDURQh8qmd1lW2ONr8GLcbPVBq8Rrr3LNWIc8BptPajzsi6dZHTHusCQBwH3lS_deY8K_ajXI9OthfO-71wPr0B9ThK06ghSZ5T6UJAi8wskDBmLilJTimAs-tUU-LBUw-pfBgrepcwhXQUnbwGjVvJDavZ_y9qVB5Bw725j-qAmQ'
-# account_id = '743f01c6-40d5-43ae-b39e-ef38eb9a7f41'
+client_id = '51d9a5db-91a9-4781-a070-c14b5a111907	' 
+base_path = 'https://demo.docusign.net/restapi' 
 
 # Document details
 document_path = f"static/dummy.pdf"
